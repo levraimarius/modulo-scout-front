@@ -2,7 +2,8 @@ import axios from "axios";
 
 export default axios.create({
     baseURL: "http://localhost:8081/api/",
-    Headers: {
-        "Accept": "application/json"
+    headers: {
+        "Accept": "application/json",
+        "Authorization": `Bearer ${localStorage.getItem('token')}`
     }
 })
