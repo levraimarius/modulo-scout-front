@@ -1,4 +1,10 @@
+<<<<<<< HEAD
 @use "styles/_variables.scss";
+=======
+@import "~bootstrap/scss/bootstrap";
+@import "styles/_variables.scss";
+@import "styles/_custom.scss";
+>>>>>>> aae701e (homepage + fomulaire Formik)
 
 .App {
   text-align: center;
