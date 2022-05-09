@@ -1,0 +1,23 @@
+/* General */
+h1 {
+    color: $purple;
+}
+
+.border-purple {
+    border-color: $purple !important;
+}
+
+/* Form */
+.error-form {
+    color: #DC3545;
+}
+
+/* Bootstrap custom */
+.btn-light {
+    background-color: #E0E1E2;
+    border-color: #E0E1E2;
+}
+
+.navbar-light .navbar-toggler {
+    border: none;
+}

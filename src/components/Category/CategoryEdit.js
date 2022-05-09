@@ -15,19 +15,25 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import ListItem from '../ListItem/ListItem';
 import { Icon } from '@iconify/react';
 import Wysiwyg from '../Wysiwyg';
+import axios from 'axios';
 
 
 const baseURL = "api/auth-token";
 const token = localStorage.getItem('token');
 
-export default function CategoryAdd() {
+export default function CategoryEdit() {
     let { id } = useParams();
     const [category, setCategory] = useState(null);
+    const [roles, setRoles] = useState([]);
 
     useEffect(() => {
         Api.get(`/event_categories/${id}`)
         .then((response) => {
-            setCategory(response.data)
+            setCategory(response.data);
+        })
+        Api.get(`/roles`)
+        .then((response) => {
+            setRoles(response.data)
         })
     }, []);
 
@@ -36,13 +42,34 @@ export default function CategoryAdd() {
             label: values.label,
             description: values.description,
             status: values.status,
-            defaultValueIsVisible: values.defaultVisible
+            defaultValueIsVisible: values.defaultVisible, 
+            fonctions: values.fonctions.map(fonction => `/api/roles/${fonction}`)
         })
         .then((response) => {
             console.log(response);
         })
         .catch(err => console.log(err))
     }
+
+    const selectedFonctions = []
+    const getFonctions = () => {
+        category && category.fonctions.map(fonction => {
+            const fonctionId = /[^/]*$/.exec(fonction)[0];
+            selectedFonctions.push(parseInt(fonctionId));
+        })
+    }
+
+    getFonctions();
+    console.log(selectedFonctions)
+
+    const fonctionOptions = []
+    const setFonctionOptions = () => {
+        {roles && roles.map(role => {
+            fonctionOptions.push(<option value={role.id}>{role.name}</option>)
+        })}
+    }
+
+    setFonctionOptions();
     return (
     <>
         <div className="container mt-5">
@@ -50,7 +77,7 @@ export default function CategoryAdd() {
             <div>
                 <Formik
                     enableReinitialize
-                    initialValues={{ label: category?.label, description: category?.description, status: category?.status, defaultVisible: category?.defaultValueIsVisible }}
+                    initialValues={{ label: category?.label, description: category?.description, status: category?.status, defaultVisible: category?.defaultValueIsVisible, fonctions: selectedFonctions }}
                     validate={values => {
                     const errors = {};
                     if (!values.label) {
@@ -76,6 +103,9 @@ export default function CategoryAdd() {
                             placeholder="Description"
                         />
                         <ErrorMessage className="error-message" name="description" component="div" />
+                        <Field as="select" name="fonctions" multiple>
+                            {fonctionOptions}
+                        </Field>
                         <Field className="input-field" type="checkbox" name="status"/>
                         <Field className="input-field" type="checkbox" name="defaultVisible"/>
                         <button className="submit-button" type="submit">

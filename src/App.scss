@@ -1,4 +1,6 @@
-@use "styles/_variables.scss";
+@import "~bootstrap/scss/bootstrap";
+@import "styles/_variables.scss";
+@import "styles/_custom.scss";
 
 .App {
   text-align: center;
