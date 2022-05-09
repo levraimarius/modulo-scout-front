@@ -1,20 +1,36 @@
 import React from "react";
 import axios from "axios";
-import jwt_decode from "jwt-decode";
-import Api from "../Api"
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Container } from "react-bootstrap";
+
 const baseURL = "api/auth-token";
 
 export default function Login() {
     const handleSubmit = (values) => {
         axios
-            .post(baseURL, datas)
+            .post(baseURL, {uuid: values.uuid.toString(), password: values.password})
             .then((response) => {
-            localStorage.setItem('token', response.data.token)
+                localStorage.setItem("token", response.data.token)
+                window.location.href = "/";
             })
             .catch(err => {
                 console.log(err);
             });
-    }
+    };
+
+    const validate = (values) => {
+        const errors = {};
+      
+        if (!values.uuid) {
+          errors.uuid = "Veuillez saisir un numéro d'adhérant valide.";
+        }
+
+        if (!values.password) {
+          errors.password = "Mot de passe incorrect.";
+        }
+      
+        return errors;
+      };
 
     return (
     <>
