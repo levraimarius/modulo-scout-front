@@ -1,0 +1,14 @@
+@import "~bootstrap/scss/bootstrap";
+@import "../../styles/_variables.scss";
+
+.scope-card {
+    padding: 40px 60px;
+    font-size: 1.8rem;
+    border: 1px solid $purple;
+    border-radius: 10px;
+    margin: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}

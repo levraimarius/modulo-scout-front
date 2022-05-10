@@ -1,5 +1,5 @@
 import './App.scss';
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Login from './components/LoginForm/Login';
 import AddUser from './components/AddUser';
 import FunctionAccreditation from './components/FunctionAccreditation/FunctionAccreditation';
@@ -9,38 +9,71 @@ import CategoryList from './components/Category/CategoryList';
 import CategoryAdd from './components/Category/CategoryAdd';
 import CategoryEdit from './components/Category/CategoryEdit';
 import ConnectedHomepage from './components/ConnectedHomepage/ConnectedHomepage';
+import ScopeChoice from './components/Scope/ScopeChoice';
 import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
+import Api from "./components/Api";
+import jwt from 'jwt-decode';
+import React, { useEffect, useState } from 'react';
 
 function App() {
+  const [user, setUser] = useState(null);
+  const token = localStorage.getItem('token');
+  let currentUser = null;
+  if (token) {
+    currentUser = jwt(token)
+  }
+  console.log(currentUser)
+  useEffect(() => {
+    currentUser && Api.get(`/users`)
+    .then((response) => {
+        setUser(response.data.find(user => user.uuid === currentUser.uuid));
+    })
+  }, []);
+
+  if (currentUser && currentUser.exp < Date.now() / 1000) {
+    localStorage.clear();
+  }
+
+  const isAdmin = () => {
+    if (currentUser && currentUser.roles.includes('ROLE_ADMIN')){
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   return (
     <>
       <Navbar bg="light" expand="" className="border-bottom border-purple mb-5">
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
-              <Nav.Link href="#home">Home</Nav.Link>
-              <Nav.Link href="#link">Link</Nav.Link>
-              <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-                <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-                <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
-                <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-                <NavDropdown.Divider />
-                <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
-              </NavDropdown>
+              <Nav.Link href="/">Accueil</Nav.Link>
+              <Nav.Link href="/scope-choice">Choix du scope</Nav.Link>
+              <Nav.Link onClick={() => localStorage.clear()}>Déconnexion</Nav.Link>
+              {isAdmin() &&
+                <NavDropdown title="Backoffice" id="basic-nav-dropdown">
+                  <NavDropdown.Item href="/roles">Roles</NavDropdown.Item>
+                  <NavDropdown.Item href="/event-categories">Catégories d'événements</NavDropdown.Item>
+                  <NavDropdown.Divider />
+                </NavDropdown>
+              }
             </Nav>
           </Navbar.Collapse>
       </Navbar>
 
     <BrowserRouter>
       <Routes>
-        { localStorage.getItem("token") === null && <Route path="/" element={<Login />} /> }
-        { localStorage.getItem("token") && <Route path="/" element={<ConnectedHomepage />} /> }
-        <Route path="/user/add" element={<AddUser />} />
-        <Route path="/roles" element={<RolesList />} />
-        <Route path="/roles/accreditation/:id" element={<FunctionAccreditation />} />
-        <Route path="/event-categories" element={<CategoryList />} />
-        <Route path="/event-categories/add" element={<CategoryAdd />} />
-        <Route path="/event-categories/edit/:id" element={<CategoryEdit />} />
+        { (localStorage.getItem("token") === null && localStorage.getItem("scope")) === null && <Route path="/" element={<Login />} /> }
+        { (localStorage.getItem("token") && localStorage.getItem("scope") !== null) && <Route path="/" element={<ConnectedHomepage />} /> }
+        { (localStorage.getItem("token") && localStorage.getItem("scope") === null) && <Route path="/" element={<ScopeChoice user={user} />} /> }
+        <Route path="/user/add" element={isAdmin() ? <AddUser /> : <Navigate to="/" />} />
+        <Route path="/roles" element={isAdmin() ? <RolesList /> : <Navigate to="/" />}/>
+        <Route path="/roles/accreditation/:id" element={isAdmin() ? <FunctionAccreditation /> : <Navigate to="/" />} />
+        <Route path="/event-categories" element={isAdmin() ? <CategoryList /> : <Navigate to="/" />} />
+        <Route path="/event-categories/add"  element={isAdmin() ? <CategoryAdd /> : <Navigate to="/" />} />
+        <Route path="/event-categories/edit/:id" element={isAdmin() ? <CategoryEdit /> : <Navigate to="/" />} />
+        <Route path="/scope-choice" element={<ScopeChoice user={user} />} />
       </Routes>
     </BrowserRouter>
     </>

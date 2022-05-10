@@ -1,42 +1,37 @@
 import React, { useEffect, useState } from 'react';
 import axios from "axios";
 import Api from "../Api"
-
-const baseURL = "api/auth-token";
-const token = localStorage.getItem('token');
+import jwt from 'jwt-decode'
+import './_scope.scss';
 
 export default function Scope(props) {
-    const [user, setUser] = useState(null);
-    const [datas, setDatas] = useState(null);
-    const [state, setState] = useState({});
-    const options = {
-        headers: {"Authorization": `Bearer ${token}`}
-    }
-    //const accreditations = props.datas.accreditation.map((accreditation) => accreditation);
+    const [structure, setStructure] = useState(null);
+    const [role, setRole] = useState(null);
 
-    const urls = [
-        props.role,
-        props.structure,
-    ]
+    const getId = (string) => {
+        return /[^/]*$/.exec(string)[0]
+    }
 
     useEffect(() => {
-        axios.all(urls.map((url) => axios.get(url, options))).then(
-            (datas) => setDatas(datas)
-        );
-    }, []);
-    console.log(datas)
+        Api.get(`/structures/${getId(props.structure)}`)
+        .then((response) => {
+            setStructure(response.data)
+        })
+
+        Api.get(`/roles/${getId(props.role)}`)
+        .then((response) => {
+            setRole(response.data)
+        })
+    }, [props]);
+
+    const setScope = (id, structure, role) => {
+        localStorage.setItem("currentScope", [structure, role]);
+        window.location.href = "/";
+    }
+
     return (
-    <>  
-        <tr>
-            <th scope="row">{props.id}</th>
-            
-            {datas !== null && datas.map(data =>
-                <>
-                    <td>{data.data.name}</td>
-                </>
-            )}
-            <td>Modifier les Habilitations</td>
-        </tr>
-    </>
+        <>  
+            {(structure && role) && <div className='scope-card' onClick={() => setScope(props.id, structure.name, role.name)}>{structure.name} - {role.name}</div>}
+        </>
     )
 }

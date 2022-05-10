@@ -46,7 +46,7 @@ export default function CategoryEdit() {
             fonctions: values.fonctions.map(fonction => `/api/roles/${fonction}`)
         })
         .then((response) => {
-            console.log(response);
+            window.location.href = "/event-categories";
         })
         .catch(err => console.log(err))
     }
@@ -73,7 +73,7 @@ export default function CategoryEdit() {
     return (
     <>
         <div className="container mt-5">
-            <h1>Ajouter un événement</h1>
+            <h1>Modifier une catégroie d'événement</h1>
             <div>
                 <Formik
                     enableReinitialize
@@ -95,21 +95,37 @@ export default function CategoryEdit() {
                 
                     {({ isSubmitting }) => (
                     <Form className="form">
-                        <Field className="input-field" type="text" name="label"/>
-                        <ErrorMessage className="error-message" name="label" component="div" />
-                        <Field
-                            component={Wysiwyg}
-                            name="description"
-                            placeholder="Description"
-                        />
-                        <ErrorMessage className="error-message" name="description" component="div" />
-                        <Field as="select" name="fonctions" multiple>
-                            {fonctionOptions}
-                        </Field>
-                        <Field className="input-field" type="checkbox" name="status"/>
-                        <Field className="input-field" type="checkbox" name="defaultVisible"/>
-                        <button className="submit-button" type="submit">
-                        Ajouter
+                        <div className="form-group mt-5">
+                            <label htmlFor="label">Libellé</label>
+                            <Field className="input-field form-control" type="text" name="label"/>
+                            <ErrorMessage className="error-message" name="label" component="div" />
+                        </div>
+                        <div className="form-group mt-5">
+                            <Field
+                                component={Wysiwyg}
+                                name="description"
+                                placeholder="Description"
+                            />
+                            <ErrorMessage className="error-message" name="description" component="div" />
+                        </div>
+                        <div className="form-group mt-5">
+                            <Field as="select" name="fonctions" className="form-select" multiple>
+                                {fonctionOptions}
+                            </Field>
+                        </div>
+                        <div className="form-group mt-5">
+                            <div className='form-check'>
+                                <Field className="input-field form-check-input" type="checkbox" name="status"/>
+                                <label className="form-check-label">Status actif ?</label>
+                            </div>
+                            <div className='form-check'>
+                                <Field className="input-field form-check-input" type="checkbox" name="defaultVisible"/>
+                                <label className="form-check-label">Le flag "Evenement visibe seulement pour les invité" est coché par défaut ?</label>
+                            </div>
+                        </div>
+
+                        <button className="submit-button btn btn-success mt-5" type="submit">
+                        Modifier
                         </button>
                     </Form>
                     )}
