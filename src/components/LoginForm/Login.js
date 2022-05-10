@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { Container } from "react-bootstrap";
@@ -6,6 +6,8 @@ import { Container } from "react-bootstrap";
 const baseURL = "api/auth-token";
 
 export default function Login() {
+    const [error, setError] = useState(null);
+
     const handleSubmit = (values) => {
         axios
             .post(baseURL, {uuid: values.uuid.toString(), password: values.password})
@@ -14,7 +16,7 @@ export default function Login() {
                 window.location.href = "/";
             })
             .catch(err => {
-                console.log(err);
+                setError(err.response.data.message);
             });
     };
 
@@ -31,12 +33,12 @@ export default function Login() {
       
         return errors;
       };
-
     return (
     <>
         <Container>
             <h1 className="d-flex justify-content-center mb-5">Bienvenue sur Modulo !</h1>
             <Formik
+                enableReinitialize
                 initialValues={{ uuid: "", password: "" }}
                 onSubmit={handleSubmit}
                 validate={validate}
@@ -54,7 +56,7 @@ export default function Login() {
                             <Field type="password" name="password" placeholder="Mot de passe" className="form-control" />
                             <ErrorMessage name="password" component="div" className="error-form" />
                         </div>
-
+                        {error && <div className="error-form">{error}</div>}
                         <button type="submit" disabled={isSubmitting} className="btn btn-light col-auto my-3">
                             Envoyer
                         </button>

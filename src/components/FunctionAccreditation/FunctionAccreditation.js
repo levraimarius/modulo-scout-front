@@ -62,7 +62,7 @@ export default function FunctionAccreditation() {
         Api.put(`roles/${id}`, {
             accreditations: checked.map(accreditation => (`${accreditation}`)),
         })
-        .then((response) => {console.log(response)})
+        .then((response) => {window.location.href = "/roles"})
         .catch((err => {console.log(err)}));
     }
     
@@ -84,7 +84,7 @@ export default function FunctionAccreditation() {
                         </tbody>
                     </table>
                     }
-                    <input type="submit" value="Valider" />
+                    <input type="submit" value="Valider" className='btn btn-success' />
                 </form>
             </div>
         </div>

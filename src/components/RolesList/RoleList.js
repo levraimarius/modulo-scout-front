@@ -20,21 +20,18 @@ export default function FunctionAccreditation() {
         .then((response) => {
             setRoles(response.data)
         })
-        .catch(err => {
-            setRoles('Une erreur est survenue, veuillez réessayer plus tard.')
-        });
     }, []);
 
     const options = {
         headers: {"Authorization": `Bearer ${token}`}
     }
-    console.log(roles)
+    
     return (
     <>
         <div className="container mt-5 test">
             <h1>Habilitation des fonctions</h1>
             <div>
-                {!roles && "Aucun scope disponible"}
+                {!roles && "Aucune fonction disponible"}
                 <table className="table">
                     <thead className="thead-light"></thead>
                     <tbody>

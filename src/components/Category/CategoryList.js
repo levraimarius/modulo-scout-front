@@ -41,7 +41,7 @@ export default function CategoryList() {
                 to={{
                     pathname: "/event-categories/add",
                 }}
-            ><button type="button" className="btn-success">Ajouter</button></Link>
+            ><button type="button" className="btn btn-success">Ajouter</button></Link>
             <div>
                 {!categories && "Chargement en cours."}
                 <table className="table">
@@ -62,7 +62,7 @@ export default function CategoryList() {
                                         dangerouslySetInnerHTML={{__html: category.description}}
                                     />
                                 </td>
-                                <td><button type="button" className="btn btn-info"><Icon icon="akar-icons:eye"/></button><Link to={`/event-categories/edit/${category.id}`} className="btn btn-success"><Icon icon="bxs:edit"/></Link><button type="button" className="btn btn-danger" onClick={() => deleteItem(category.id)}><Icon icon="fluent:delete-24-filled"/></button></td>
+                                <td><Link to={`/event-categories/edit/${category.id}`} className="btn btn-success"><Icon icon="bxs:edit"/></Link><button type="button" className="btn btn-danger" onClick={() => deleteItem(category.id)}><Icon icon="fluent:delete-24-filled"/></button></td>
                             </tr>
                         ))}
                     </tbody>
