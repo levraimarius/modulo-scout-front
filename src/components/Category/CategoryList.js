@@ -25,12 +25,11 @@ export default function CategoryList() {
         .then((response) => {
             setCategories(response.data);
         })
-        .catch(err => console.log(err))
     }, []);
 
     const deleteItem = (id) => {
         Api.delete(`/event_categories/${id}`)
-        .then(window.location.reload());
+        .then(window.location.href = "/event-categories");
     }
     
     return (

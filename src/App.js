@@ -1,7 +1,6 @@
 import './App.scss';
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Login from './components/LoginForm/Login';
-import AddUser from './components/AddUser';
 import FunctionAccreditation from './components/FunctionAccreditation/FunctionAccreditation';
 import RolesList from './components/RolesList/RoleList';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -24,7 +23,7 @@ function App() {
   if (token) {
     currentUser = jwt(token)
   }
-  console.log(currentUser)
+
   useEffect(() => {
     currentUser && Api.get(`/users`)
     .then((response) => {
@@ -57,7 +56,7 @@ function App() {
                 <NavDropdown title="Backoffice" id="basic-nav-dropdown">
                   <NavDropdown.Item href="/roles">Roles</NavDropdown.Item>
                   <NavDropdown.Item href="/event-categories">Catégories d'événements</NavDropdown.Item>
-                  <NavDropdown.Divider />
+                  <NavDropdown.Item href="/users/:page">Liste utilisateurs</NavDropdown.Item>
                 </NavDropdown>
               }
             </Nav>
@@ -66,10 +65,9 @@ function App() {
 
     <BrowserRouter>
       <Routes>
-        { (localStorage.getItem("token") === null && localStorage.getItem("scope")) === null && <Route path="/" element={<Login />} /> }
-        { (localStorage.getItem("token") && localStorage.getItem("scope") !== null) && <Route path="/" element={<ConnectedHomepage />} /> }
-        { (localStorage.getItem("token") && localStorage.getItem("scope") === null) && <Route path="/" element={<ScopeChoice user={user} />} /> }
-        <Route path="/user/add" element={isAdmin() ? <AddUser /> : <Navigate to="/" />} />
+        { (localStorage.getItem("token") === null && localStorage.getItem("currentScope")) === null && <Route path="/" element={<Login />} /> }
+        { (localStorage.getItem("token") && localStorage.getItem("currentScope") !== null) && <Route path="/" element={<ConnectedHomepage />} /> }
+        { (localStorage.getItem("token") && localStorage.getItem("currentScope") === null) && <Route path="/" element={<ScopeChoice user={user} />} /> }
         <Route path="/roles" element={isAdmin() ? <RolesList /> : <Navigate to="/" />}/>
         <Route path="/roles/accreditation/:id" element={isAdmin() ? <FunctionAccreditation /> : <Navigate to="/" />} />
         <Route path="/event-categories" element={isAdmin() ? <CategoryList /> : <Navigate to="/" />} />
@@ -77,7 +75,7 @@ function App() {
         <Route path="/event-categories/edit/:id" element={isAdmin() ? <CategoryEdit /> : <Navigate to="/" />} />
         <Route path="/scope-choice" element={<ScopeChoice user={user} />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/users/:page" element={<ListUsers />} />
+        <Route path="/users/:page" element={isAdmin() ? <ListUsers /> : <Navigate to="/" />} />
       </Routes>
     </BrowserRouter>
     </>

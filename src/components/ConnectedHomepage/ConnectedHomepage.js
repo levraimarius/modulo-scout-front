@@ -4,7 +4,6 @@ import Api from "../Api";
 
 export default function ConnectedHomepage() {
     const currentScope = localStorage.getItem("currentScope");
-    console.log(localStorage)
 
     return (
     <>

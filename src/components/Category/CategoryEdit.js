@@ -48,7 +48,6 @@ export default function CategoryEdit() {
         .then((response) => {
             window.location.href = "/event-categories";
         })
-        .catch(err => console.log(err))
     }
 
     const selectedFonctions = []
@@ -60,7 +59,6 @@ export default function CategoryEdit() {
     }
 
     getFonctions();
-    console.log(selectedFonctions)
 
     const fonctionOptions = []
     const setFonctionOptions = () => {

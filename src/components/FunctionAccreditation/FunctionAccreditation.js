@@ -40,7 +40,7 @@ export default function FunctionAccreditation() {
         })
 
     }, []);
-    console.log(role)
+    
     role && role.accreditations.map(accreditation => {
         const accreditationId = /[^/]*$/.exec(accreditation)[0];
         accreditationIds.push(parseInt(accreditationId));
@@ -63,7 +63,6 @@ export default function FunctionAccreditation() {
             accreditations: checked.map(accreditation => (`${accreditation}`)),
         })
         .then((response) => {window.location.href = "/roles"})
-        .catch((err => {console.log(err)}));
     }
     
     return (

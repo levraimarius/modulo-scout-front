@@ -1,6 +1,5 @@
 import Api from "../Api";
 import { useEffect, useState } from "react";
-import Loading from "../Tools/Loading";
 import { useParams } from "react-router";
 import FormUsers from "./FormUsers.js";
 import Table from "react-bootstrap/Table";
@@ -72,7 +71,7 @@ export default function ListUsers() {
                     </div>
 
                     {
-                        loading ? <Loading /> : UsersTable(users)
+                        !loading && UsersTable(users)
                     }
                 </div>
 
@@ -83,7 +82,6 @@ export default function ListUsers() {
         </div>
     )
 }
-
 
 function UsersTable(users) {
     const updateUser = user => {
@@ -113,7 +111,7 @@ function UsersTable(users) {
             console.log(err);
         })
     }
-
+    
     return (
         <div className="table-responsive-xxl mt-3">
             <Table hover striped>

@@ -57,7 +57,7 @@ export default function Login() {
                             <ErrorMessage name="password" component="div" className="error-form" />
                         </div>
                         {error && <div className="error-form">{error}</div>}
-                        <button type="submit" disabled={isSubmitting} className="btn btn-light col-auto my-3">
+                        <button type="submit" className="btn btn-light col-auto my-3">
                             Envoyer
                         </button>
                     </Form>

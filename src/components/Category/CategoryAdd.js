@@ -27,11 +27,9 @@ export default function CategoryAdd() {
         .then((response) => {
             setRoles(response.data);
         })
-        .catch(err => console.log(err))
     }, []);
 
     const handleSubmit = (values) => {
-        console.log(values.fonctions.map(fonction => `/api/roles/${fonction}`));
         Api.post('/event_categories', {
             label: values.label,
             description: values.description,
@@ -42,7 +40,6 @@ export default function CategoryAdd() {
         .then((response) => {
             window.location.href = "/event-categories";
         })
-        .catch(err => console.log(err))
     }
     
     const fonctionOptions = []
