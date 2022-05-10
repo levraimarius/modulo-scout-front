@@ -14,6 +14,8 @@ import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
 import Api from "./components/Api";
 import jwt from 'jwt-decode';
 import React, { useEffect, useState } from 'react';
+import ListUsers from './components/Users/ListUsers';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -74,6 +76,8 @@ function App() {
         <Route path="/event-categories/add"  element={isAdmin() ? <CategoryAdd /> : <Navigate to="/" />} />
         <Route path="/event-categories/edit/:id" element={isAdmin() ? <CategoryEdit /> : <Navigate to="/" />} />
         <Route path="/scope-choice" element={<ScopeChoice user={user} />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/users/:page" element={<ListUsers />} />
       </Routes>
     </BrowserRouter>
     </>
