@@ -29,7 +29,9 @@ export default function CategoryList() {
 
     const deleteItem = (id) => {
         Api.delete(`/event_categories/${id}`)
-        .then(window.location.href = "/event-categories");
+        .then(res => {
+            window.location.href = "/event-categories"
+        });
     }
     
     return (
@@ -54,7 +56,7 @@ export default function CategoryList() {
                     </thead>
                     <tbody>
                         {categories && categories.map(category => (
-                            <tr>
+                            <tr key={category.id}>
                                 <th scope="row">{category.id}</th>
                                 <td>{category.label}</td>
                                 <td><div

@@ -98,41 +98,6 @@ export default function FormUsers() {
                             .max(2, "Maximum 2 scopes peuvent être rattachées à l'utilisateur")
                     })
                 }
-                /*validate={values => {
-                    const errors = {}
-
-                    if (!values.lastName) {
-                        errors.lastName = 'Champs obligatoire'
-                    }
-
-                    if (!values.firstName) {
-                        errors.firstName = 'Champs obligatoire'
-                    }
-
-                    if (!values.email) {
-                        errors.email = 'Champs obligatoire'
-                    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)) {
-                        errors.email = 'Format de l\'adresse mail incorrect'
-                    }
-
-                    if (!values.adherentNumber) {
-                        errors.adherentNumber = 'Champs obligatoire'
-                    }
-
-                    if (!values.gender) {
-                        errors.gender = "Champs obligatoire"
-                    }
-
-                    if (!values.structure) {
-                        errors.structure = "Veuillez sélectionner une structure dans la liste"
-                    }
-
-                    if (!values.role) {
-                        errors.role = "Veuillez sélectionner un rôle dans la liste"
-                    }
-                    
-                    return errors
-                }}*/
                 onSubmit={(values, { setSubmitting }) => {
                     console.log('test');
                     Api.post('users', {
