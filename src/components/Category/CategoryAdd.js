@@ -35,7 +35,8 @@ export default function CategoryAdd() {
             description: values.description,
             status: values.status,
             defaultValueIsVisible: values.defaultVisible,
-            fonctions: values.fonctions.map(fonction => `/api/roles/${fonction}`)
+            fonctions: values.fonctions.map(fonction => `/api/roles/${fonction}`),
+            fonctionAccreditations: values.fonctionAccreditations.map(fonction => `/api/roles/${fonction}`)
         })
         .then((response) => {
             window.location.href = "/event-categories";
@@ -45,7 +46,7 @@ export default function CategoryAdd() {
     const fonctionOptions = []
     const setFonctionOptions = () => {
         {roles && roles.map(role => {
-            fonctionOptions.push(<option value={role.id}>{role.name}</option>)
+            fonctionOptions.push(<option value={role.id} key={role.id}>{role.name}</option>)
         })}
     }
 
@@ -56,14 +57,17 @@ export default function CategoryAdd() {
             <h1>Ajouter une catégorie d'événement</h1>
             <div>
                 <Formik
-                    initialValues={{ label: '', description: '', status: false, defaultVisible: false, fonctions: '' }}
+                    initialValues={{ label: '', description: '', status: false, defaultVisible: false, fonctions: [], fonctionAccreditations: [] }}
                     validate={values => {
                     const errors = {};
                     if (!values.label) {
-                        errors.label = 'Vous devez renseigner un libellé.';
+                        errors.label = 'Vous devez renseigner un libellé';
                     }
                     if (!values.description) {
                         errors.description = 'Vous devez renseigner une description';
+                    }
+                    if (values.fonctionAccreditations.length === 0) {
+                        errors.fonctionAccreditations = 'Vous devez sélectionner au moins un rôle'
                     }
                     return errors;
                     }}
@@ -72,7 +76,7 @@ export default function CategoryAdd() {
                     }}
                 >
                 
-                    {({ isSubmitting }) => (
+                {({ isSubmitting }) => (
                     <Form className="form">
                         <div className="form-group mt-5">
                             <label htmlFor="label">Libellé</label>
@@ -80,6 +84,7 @@ export default function CategoryAdd() {
                             <ErrorMessage className="error-message" name="label" component="div" />
                         </div>
                         <div className="form-group mt-5">
+                            <label htmlFor='description'>Template de l'événement</label>
                             <Field
                                 component={Wysiwyg}
                                 name="description"
@@ -88,18 +93,26 @@ export default function CategoryAdd() {
                             <ErrorMessage className="error-message" name="description" component="div" />
                         </div>
                         <div className="form-group mt-5">
+                            <label htmlFor='fonctions'>Fonctions invitées par défaut</label>
                             <Field as="select" name="fonctions" className="form-select" multiple>
                                 {fonctionOptions}
                             </Field>
                         </div>
                         <div className="form-group mt-5">
+                            <label htmlFor='fonctionAccreditations'>Fonctions habilitées à créer un événement de cette catégorie</label>
+                            <Field as="select" name="fonctionAccreditations" className="form-select" multiple>
+                                {fonctionOptions}
+                            </Field>
+                            <ErrorMessage className="error-message" name="fonctionAccreditations" component="div" />
+                        </div>
+                        <div className="form-group mt-5">
                             <div className='form-check'>
                                 <Field className="input-field form-check-input" type="checkbox" name="status"/>
-                                <label className="form-check-label">Status actif ?</label>
+                                <label className="form-check-label" htmlFor='status'>Status actif ?</label>
                             </div>
                             <div className='form-check'>
                                 <Field className="input-field form-check-input" type="checkbox" name="defaultVisible"/>
-                                <label className="form-check-label">Le flag "Evenement visibe seulement pour les invité" est coché par défaut ?</label>
+                                <label className="form-check-label" htmlFor='defaultVisible'>Le flag "Evénement visible seulement pour les invités" est coché par défaut ?</label>
                             </div>
                         </div>
 
@@ -107,7 +120,7 @@ export default function CategoryAdd() {
                             Ajouter
                         </button>
                     </Form>
-                    )}
+                )}
                 </Formik>
             </div>
         </div>

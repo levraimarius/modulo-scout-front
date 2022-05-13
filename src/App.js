@@ -63,21 +63,21 @@ function App() {
           </Navbar.Collapse>
       </Navbar>
 
-    <BrowserRouter>
-      <Routes>
-        { (localStorage.getItem("token") === null && localStorage.getItem("currentScope")) === null && <Route path="/" element={<Login />} /> }
-        { (localStorage.getItem("token") && localStorage.getItem("currentScope") !== null) && <Route path="/" element={<ConnectedHomepage />} /> }
-        { (localStorage.getItem("token") && localStorage.getItem("currentScope") === null) && <Route path="/" element={<ScopeChoice user={user} />} /> }
-        <Route path="/roles" element={isAdmin() ? <RolesList /> : <Navigate to="/" />}/>
-        <Route path="/roles/accreditation/:id" element={isAdmin() ? <FunctionAccreditation /> : <Navigate to="/" />} />
-        <Route path="/event-categories" element={isAdmin() ? <CategoryList /> : <Navigate to="/" />} />
-        <Route path="/event-categories/add"  element={isAdmin() ? <CategoryAdd /> : <Navigate to="/" />} />
-        <Route path="/event-categories/edit/:id" element={isAdmin() ? <CategoryEdit /> : <Navigate to="/" />} />
-        <Route path="/scope-choice" element={<ScopeChoice user={user} />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/users/:page" element={isAdmin() ? <ListUsers /> : <Navigate to="/" />} />
-      </Routes>
-    </BrowserRouter>
+      <BrowserRouter>
+        <Routes>
+          { (localStorage.getItem("token") === null && localStorage.getItem("currentScope")) === null && <Route path="/" element={<Login />} /> }
+          { (localStorage.getItem("token") && localStorage.getItem("currentScope") !== null) && <Route path="/" element={<ConnectedHomepage />} /> }
+          { (localStorage.getItem("token") && localStorage.getItem("currentScope") === null) && <Route path="/" element={<ScopeChoice user={user} />} /> }
+          <Route path="/roles" element={isAdmin() ? <RolesList /> : <Navigate to="/" />}/>
+          <Route path="/roles/accreditation/:id" element={isAdmin() ? <FunctionAccreditation /> : <Navigate to="/" />} />
+          <Route path="/event-categories" element={isAdmin() ? <CategoryList /> : <Navigate to="/" />} />
+          <Route path="/event-categories/add"  element={isAdmin() ? <CategoryAdd /> : <Navigate to="/" />} />
+          <Route path="/event-categories/edit/:id" element={isAdmin() ? <CategoryEdit /> : <Navigate to="/" />} />
+          <Route path="/scope-choice" element={<ScopeChoice user={user} />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/users/:page" element={isAdmin() ? <ListUsers /> : <Navigate to="/" />} />
+        </Routes>
+      </BrowserRouter>
     </>
   );
 }
