@@ -1,5 +1,5 @@
 import './App.scss';
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, NavLink } from "react-router-dom";
 import Login from './components/LoginForm/Login';
 import FunctionAccreditation from './components/FunctionAccreditation/FunctionAccreditation';
 import RolesList from './components/RolesList/RoleList';
@@ -9,7 +9,7 @@ import CategoryAdd from './components/Category/CategoryAdd';
 import CategoryEdit from './components/Category/CategoryEdit';
 import ConnectedHomepage from './components/ConnectedHomepage/ConnectedHomepage';
 import ScopeChoice from './components/Scope/ScopeChoice';
-import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
+import { Navbar, Nav, NavDropdown, Container } from 'react-bootstrap';
 import Api from "./components/Api";
 import jwt from 'jwt-decode';
 import React, { useEffect, useState } from 'react';
@@ -32,7 +32,8 @@ function App() {
   }, []);
 
   if (currentUser && currentUser.exp < Date.now() / 1000) {
-    localStorage.clear();
+    localStorage.clear()
+    window.location.href = "/login"
   }
 
   const isAdmin = () => {
@@ -45,22 +46,32 @@ function App() {
 
   return (
     <>
-      <Navbar bg="light" expand="" className="border-bottom border-purple mb-5">
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="me-auto">
-              <Nav.Link href="/">Accueil</Nav.Link>
-              <Nav.Link href="/scope-choice">Choix du scope</Nav.Link>
-              <Nav.Link onClick={() => localStorage.clear()}>Déconnexion</Nav.Link>
-              {isAdmin() &&
-                <NavDropdown title="Backoffice" id="basic-nav-dropdown">
-                  <NavDropdown.Item href="/roles">Roles</NavDropdown.Item>
-                  <NavDropdown.Item href="/event-categories">Catégories d'événements</NavDropdown.Item>
-                  <NavDropdown.Item href="/users/:page">Liste utilisateurs</NavDropdown.Item>
-                </NavDropdown>
+      <Navbar colapseOnSelect bg="light" expand="sm" sticky='top' className="border-bottom border-purple mb-5">
+        <Container className='m-0'>
+          <Navbar.Brand href="/">Modulo</Navbar.Brand>
+          <Navbar.Toggle aria-controls='responsive-navbar-nav' />
+          <Navbar.Collapse id="responsive-navbar-nav">
+              {
+                token &&
+                <Nav className='me-auto'>
+                  <Nav.Link href="/" className={window.location.pathname === '/' && 'active'}>Accueil</Nav.Link>
+                  <Nav.Link href="/scope-choice" className={window.location.pathname === '/scope-choice' && 'active'}>Choix du scope</Nav.Link>
+                  {
+                    isAdmin() &&
+                      <NavDropdown title="Backoffice" id="basic-nav-dropdown">
+                        <NavDropdown.Item href='/roles'>Roles</NavDropdown.Item>
+                        <NavDropdown.Item href='/event-categories'>Catégories d'événements</NavDropdown.Item>
+                        <NavDropdown.Item href='/users/1'>Liste utilisateurs</NavDropdown.Item>
+                      </NavDropdown>
+                  }
+                  <Nav.Link onClick={() => { 
+                    localStorage.clear()
+                    window.location.href = "/login"
+                  }}>Déconnexion</Nav.Link>
+                </Nav>
               }
-            </Nav>
           </Navbar.Collapse>
+        </Container>
       </Navbar>
 
       <BrowserRouter>
