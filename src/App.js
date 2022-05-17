@@ -14,6 +14,7 @@ import Api from "./components/Api";
 import jwt from 'jwt-decode';
 import React, { useEffect, useState } from 'react';
 import ListUsers from './components/Users/ListUsers';
+import Agenda from './components/Agenda/Agenda';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
@@ -36,8 +37,12 @@ function App() {
     window.location.href = "/login"
   }
 
+  const isConnected = () => {
+    return currentUser !== null ? true : false;
+  }
+
   const isAdmin = () => {
-    if (currentUser && currentUser.roles.includes('ROLE_ADMIN')){
+    if (isConnected() && currentUser.roles.includes('ROLE_ADMIN')){
       return true;
     } else {
       return false;
@@ -46,7 +51,7 @@ function App() {
 
   return (
     <>
-      <Navbar colapseOnSelect bg="light" expand="sm" sticky='top' className="border-bottom border-purple mb-5">
+      <Navbar colapseonselect bg="light" expand="sm" sticky='top' className="border-bottom border-purple mb-5">
         <Container className='m-0'>
           <Navbar.Brand href="/">Modulo</Navbar.Brand>
           <Navbar.Toggle aria-controls='responsive-navbar-nav' />
@@ -87,6 +92,7 @@ function App() {
           <Route path="/scope-choice" element={<ScopeChoice user={user} />} />
           <Route path="/login" element={<Login />} />
           <Route path="/users/:page" element={isAdmin() ? <ListUsers /> : <Navigate to="/" />} />
+          <Route path="/agenda" element={isConnected ? <Agenda /> : <Navigate to="/" />} />
         </Routes>
       </BrowserRouter>
     </>
