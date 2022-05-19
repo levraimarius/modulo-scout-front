@@ -8,7 +8,7 @@ export default function SelectYear(props) {
     const dateOptions = [];
 
     while (currentYear >= props.lastestYear) {
-        dateOptions.push(<option value={currentYear} selected={currentYear === new Date().getFullYear()}>{currentYear}</option>)
+        dateOptions.push(<option value={currentYear} selected={currentYear === new Date().getFullYear()} key={currentYear}>{currentYear}</option>)
         currentYear -= 1;
     }
 

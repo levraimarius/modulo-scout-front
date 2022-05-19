@@ -24,14 +24,14 @@ export default function Scope(props) {
         })
     }, [props]);
 
-    const setScope = (id, structure, role) => {
-        localStorage.setItem("currentScope", [structure, role]);
+    const setScope = (id, structureId, structureName, roleId, roleName) => {
+        localStorage.setItem("currentScope", JSON.stringify([[structureId, structureName], [roleId, roleName]]));
         window.location.href = "/";
     }
 
     return (
         <>  
-            {(structure && role) && <div className='scope-card' onClick={() => setScope(props.id, structure.name, role.name)}>{structure.name} - {role.name}</div>}
+            {(structure && role) && <div className='scope-card' onClick={() => setScope(props.id, structure.id, structure.name, role.id, role.name)}>{structure.name} - {role.name}</div>}
         </>
     )
 }
