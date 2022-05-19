@@ -19,7 +19,7 @@ export default function ScopeChoice(props) {
     <>  
         <div>Choisissez votre scope</div>
         {scopes && scopes.map(scope => 
-            <Scope structure={scope.structure} role={scope.role} id={scope.id}/>
+            <Scope structure={scope.structure} role={scope.role} id={scope.id} key={scope.id} />
         )}
     </>
     )

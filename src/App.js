@@ -61,6 +61,7 @@ function App() {
                 <Nav className='me-auto'>
                   <Nav.Link href="/" className={window.location.pathname === '/' && 'active'}>Accueil</Nav.Link>
                   <Nav.Link href="/scope-choice" className={window.location.pathname === '/scope-choice' && 'active'}>Choix du scope</Nav.Link>
+                  <Nav.Link href="/agenda" className={window.location.pathname === '/agenda' && 'active'}>Agenda</Nav.Link>
                   {
                     isAdmin() &&
                       <NavDropdown title="Backoffice" id="basic-nav-dropdown">
