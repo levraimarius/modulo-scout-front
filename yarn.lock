@@ -1266,6 +1266,14 @@
     preact "^10.0.5"
     tslib "^2.1.0"
 
+"@fullcalendar/daygrid@^5.11.0":
+  version "5.11.0"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/daygrid/-/daygrid-5.11.0.tgz#fd10391dfc2b6caa3538e0826f8d8f3e83e0e22a"
+  integrity sha512-Ybh/dfHn/VL0qOVIRVyJc9I8oYiqqHl6xQONk8xXCe456QbPzAQLsAxpLLJLH+3smWNCfoQgvDKzR9e9XTzLMQ==
+  dependencies:
+    "@fullcalendar/common" "~5.11.0"
+    tslib "^2.1.0"
+
 "@fullcalendar/list@^5.11.0":
   version "5.11.0"
   resolved "https://registry.yarnpkg.com/@fullcalendar/list/-/list-5.11.0.tgz#536b51ebad59d15c238997e37e3d0e0fd09e9579"
@@ -4858,6 +4866,11 @@ fsevents@^2.3.2, fsevents@~2.3.2:
   version "2.3.2"
   resolved "https://registry.yarnpkg.com/fsevents/-/fsevents-2.3.2.tgz#8a526f78b8fdf4623b709e0b975c52c24c02fd1a"
   integrity sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==
+
+fullcalendar@^5.11.0:
+  version "5.11.0"
+  resolved "https://registry.yarnpkg.com/fullcalendar/-/fullcalendar-5.11.0.tgz#ad22a10fbf821940a1aa10d8670700bf0e1548d8"
+  integrity sha512-R3yQMKJtP6jWZ3o9fNB0WUOl6Oi+vus3ciLtt3eva7ISutkMm6nE4lA+xhfTS3OIevxVQOv0O646R6G8o7sMXA==
 
 function-bind@^1.1.1:
   version "1.1.1"
