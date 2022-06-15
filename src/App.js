@@ -65,7 +65,7 @@ function App() {
                   {
                     isAdmin() &&
                       <NavDropdown title="Backoffice" id="basic-nav-dropdown">
-                        <NavDropdown.Item href='/roles'>Roles</NavDropdown.Item>
+                        <NavDropdown.Item href='/roles'>Rôles</NavDropdown.Item>
                         <NavDropdown.Item href='/event-categories'>Catégories d'événements</NavDropdown.Item>
                         <NavDropdown.Item href='/users'>Gestion des utilisateurs</NavDropdown.Item>
                       </NavDropdown>
@@ -93,7 +93,7 @@ function App() {
           <Route path="/scope-choice" element={<ScopeChoice user={user} />} />
           <Route path="/login" element={<Login />} />
           <Route path="/users" element={isAdmin() ? <ListUsers /> : <Navigate to="/" />} />
-          <Route path="/agenda" element={isConnected ? <Agenda /> : <Navigate to="/" />} />
+          <Route path="/agenda" element={isConnected ? <Agenda user={user} /> : <Navigate to="/" />} />
         </Routes>
       </BrowserRouter>
     </>
