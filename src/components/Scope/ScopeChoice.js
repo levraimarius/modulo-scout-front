@@ -7,6 +7,7 @@ import Scope from './Scope';
 export default function ScopeChoice(props) {
     const [scopes, setScopes] = useState([]);
     const tabScopes = [];
+
     useEffect(() => {
         Api.get(`/scopes`)
         .then((response) => {

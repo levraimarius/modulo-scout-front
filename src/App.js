@@ -51,7 +51,7 @@ function App() {
 
   return (
     <>
-      <Navbar colapseonselect bg="light" expand="sm" sticky='top' className="border-bottom border-purple mb-5">
+      <Navbar colapseonselect bg="light" expand="lg" sticky='top' className="border-bottom border-purple mb-5">
         <Container className='m-0'>
           <Navbar.Brand href="/">Modulo</Navbar.Brand>
           <Navbar.Toggle aria-controls='responsive-navbar-nav' />
@@ -67,7 +67,7 @@ function App() {
                       <NavDropdown title="Backoffice" id="basic-nav-dropdown">
                         <NavDropdown.Item href='/roles'>Roles</NavDropdown.Item>
                         <NavDropdown.Item href='/event-categories'>Catégories d'événements</NavDropdown.Item>
-                        <NavDropdown.Item href='/users/1'>Liste utilisateurs</NavDropdown.Item>
+                        <NavDropdown.Item href='/users'>Gestion des utilisateurs</NavDropdown.Item>
                       </NavDropdown>
                   }
                   <Nav.Link onClick={() => { 
@@ -92,7 +92,7 @@ function App() {
           <Route path="/event-categories/edit/:id" element={isAdmin() ? <CategoryEdit /> : <Navigate to="/" />} />
           <Route path="/scope-choice" element={<ScopeChoice user={user} />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/users/:page" element={isAdmin() ? <ListUsers /> : <Navigate to="/" />} />
+          <Route path="/users" element={isAdmin() ? <ListUsers /> : <Navigate to="/" />} />
           <Route path="/agenda" element={isConnected ? <Agenda /> : <Navigate to="/" />} />
         </Routes>
       </BrowserRouter>

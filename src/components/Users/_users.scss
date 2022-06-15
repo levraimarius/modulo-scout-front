@@ -1,0 +1,23 @@
+@media screen and (max-width: 1030px) {
+    .desktop {
+        display: none;
+    }
+}
+
+@media screen and (min-width: 1031px) {
+    .mobile {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 635px) {
+    .mobile-list {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 1348px) {
+    .desktop-list {
+        display: none;
+    }
+}
