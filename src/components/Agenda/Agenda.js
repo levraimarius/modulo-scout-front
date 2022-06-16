@@ -1,14 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState, useLayoutEffect } from 'react';
 //import AgendaMonth from './AgendaMonth';
 import Api from '../Api';
 import SelectYear from '../SelectYear/SelectYear';
-import FullCalendar from '@fullcalendar/react';
+import FullCalendar, { CalendarApi, CalendarDataManager, formatDate } from '@fullcalendar/react';
 import listPlugin from '@fullcalendar/list';
 import frLocale from '@fullcalendar/core/locales/fr';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import Form from 'react-bootstrap/Form'
 
 export default function Agenda({user}) {
     const [events, setEvents] = useState([]);
-    const [months, setMonths] = useState(null);
     const [year, setYear] = useState(new Date().getFullYear());
     const currentMonth = useState(new Date().getMonth());
     const currentScope = JSON.parse(localStorage.getItem('currentScope'));
@@ -22,6 +23,28 @@ export default function Agenda({user}) {
         
         return uniqueArray
     }
+    const [isMobile, setIsMobile] = useState('');
+    const months = [
+        'Janvier',
+        'Fevrier',
+        'Mars',
+        'Avril',
+        'Mai',
+        'Juin',
+        'Juillet',
+        'Aout',
+        'Septembre',
+        'Octobre',
+        'Novembre',
+        'Décembre'
+    ]
+
+    const monthsOption = [];
+
+    months.map((month, index) => monthsOption.push(<option value={index + 1} key={index} selected={index + 1 === new Date().getMonth() + 1}>{month}</option>))
+    
+
+    const calendarRef = useRef();
 
     const getEvents = () => {
         // Evènements liés à la structure de mon scope
@@ -65,19 +88,66 @@ export default function Agenda({user}) {
             setEvents([...events, ...deleteDuplicates(arrayEvents)])
         })
     }
+    
+    const changeView = view => {
+        const API = getApi();
+        API && API.changeView(view)
+    }
+
+    const getApi = () => {
+        const { current: calendarDom } = calendarRef;
+        return calendarDom ? calendarDom.getApi() : null;
+    }
+
+    const onYearChange = (year) => {
+        const API = getApi();
+        const month = API && API.getDate().getMonth();
+        const date = API && new Date(`${year}-${month+1}`);
+        API && API.gotoDate(date)
+    }
+
+    const onMonthChange = (month, year) => {
+        const API = getApi();
+        const date = API && new Date(`${year}-${month}`);
+        API && API.gotoDate(date)
+    }
 
     useEffect(() => {
         currentIdUser !== null && getEvents()
 
         setMonths(['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juiller', 'Aout', 'Septembre', 'Octobre', 'Novembre', 'Décembre'])
         
-    }, [currentIdUser])
+        const resizeListener = () => {
+            changeView(window.innerWidth < 960 ? 'listMonth' : 'dayGridMonth')
+        }
 
+        window.addEventListener('resize', resizeListener);
+    
+        return () => {
+            window.removeEventListener('resize', resizeListener);
+        }
+        
+    }, [currentIdUser, year])
+    
     return (
     <>  
         <h1>Agenda</h1>
-        <SelectYear year={setYear} lastestYear={2018}></SelectYear>
-        <FullCalendar locale={frLocale} plugins={[listPlugin]} initialView="listMonth" events={events}></FullCalendar>
+        <SelectYear year={setYear, onYearChange} lastestYear={2018}/>
+        <Form.Select onChange={(e) => onMonthChange(e.target.value, year)}>
+            {monthsOption}
+        </Form.Select>
+        <FullCalendar
+            locale={frLocale}
+            plugins={[listPlugin, dayGridPlugin]}
+            initialView={isMobile}
+            events={events}
+            headerToolbar={{
+                left: "prev,next",
+                center: "title",
+                right: "dayGridMonth,listMonth"
+            }}
+            ref={calendarRef}
+        />
     </>
     )
 }
