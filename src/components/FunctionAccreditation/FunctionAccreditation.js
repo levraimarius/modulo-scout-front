@@ -36,7 +36,7 @@ export default function FunctionAccreditation() {
         .then((response) => {
             setRole(response.data);
             let test = [];
-            setChecked(response.data.accreditations)
+            setChecked(response.data.accreditations.map(accreditation => accreditation.id))
         })
 
     }, []);
@@ -47,20 +47,20 @@ export default function FunctionAccreditation() {
         //checkedAccreditations.push(accreditation);
         //setChecked({[parseInt(accreditationId)]: true})
     })
-
     const handleChange = (accreditation, value, e) => {
-        if (checked.indexOf(`/api/accreditations/${accreditation}`) === -1) {
-            setChecked([...checked, `/api/accreditations/${accreditation}`])
+        if (checked.indexOf(accreditation) === -1) {
+            setChecked([...checked, accreditation])
         } else {
-            const index = checked.indexOf(`/api/accreditations/${accreditation}`)
+            const index = checked.indexOf(accreditation)
             checked.splice(index, 1)
         }
 
     }
     const handleSubmit = (e) => {
         e.preventDefault();
+        console.log(checked.map(accreditation => accreditation))
         Api.put(`roles/${id}`, {
-            accreditations: checked.map(accreditation => (`${accreditation}`)),
+            accreditations: checked.map(accreditation => (`/api/accreditations/${accreditation}`)),
         })
         .then((response) => {window.location.href = "/roles"})
     }

@@ -19,6 +19,7 @@ import React, { useEffect, useState } from 'react';
 import ListUsers from './components/Users/ListUsers';
 import Agenda from './components/Agenda/Agenda';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import {getRoleAccreditations} from './components/Accreditations';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -29,9 +30,9 @@ function App() {
   }
 
   useEffect(() => {
-    currentUser && Api.get(`/users`)
+    currentUser && Api.get(`users?uuid=${currentUser.uuid}`)
     .then((response) => {
-        setUser(response.data.find(user => user.uuid === currentUser.uuid));
+        setUser(response.data[0]);
     })
   }, []);
 
