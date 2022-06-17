@@ -6,21 +6,19 @@ import Scope from './Scope';
 
 export default function ScopeChoice(props) {
     const [scopes, setScopes] = useState([]);
+    const [roles, setRoles] = useState([]);
+    const [structures, setStructures] = useState([]);
     const tabScopes = [];
 
     useEffect(() => {
-        Api.get(`/scopes`)
-        .then((response) => {
-            response.data.map(scope => scope.user === `/api/users/${props.user.id}` ? tabScopes.push(scope) : '')
-            setScopes(tabScopes)
-        })
+        props.user && setScopes(props.user.scope)
       }, [props]);
 
     return (
     <>  
         <div>Choisissez votre scope</div>
         {scopes && scopes.map(scope => 
-            <Scope structure={scope.structure} role={scope.role} id={scope.id} key={scope.id} />
+            <Scope structure={scope.structure.id} role={scope.role.id} id={scope.id} key={scope.id} />
         )}
     </>
     )

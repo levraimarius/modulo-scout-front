@@ -6,7 +6,9 @@ import FullCalendar, { CalendarApi, CalendarDataManager, formatDate } from '@ful
 import listPlugin from '@fullcalendar/list';
 import frLocale from '@fullcalendar/core/locales/fr';
 import dayGridPlugin from '@fullcalendar/daygrid';
+import interactionPlugin from '@fullcalendar/interaction'; 
 import Form from 'react-bootstrap/Form'
+import { useNavigate } from "react-router";
 
 export default function Agenda({user}) {
     const [events, setEvents] = useState([]);
@@ -52,10 +54,8 @@ export default function Agenda({user}) {
         .then(res => {
             const data = res.data
             const arrayEvents = []
-
             data.map(structure => {
                 arrayEvents.push(...structure.events)
-
                 structure.parentStructure.events.map(event => {
                     // Evènements liés à la structure parente et où ma fonction est invitée
                     event.invitedRoles.map(roles => {
@@ -114,8 +114,6 @@ export default function Agenda({user}) {
 
     useEffect(() => {
         currentIdUser !== null && getEvents()
-
-        setMonths(['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juiller', 'Aout', 'Septembre', 'Octobre', 'Novembre', 'Décembre'])
         
         const resizeListener = () => {
             changeView(window.innerWidth < 960 ? 'listMonth' : 'dayGridMonth')
@@ -129,6 +127,10 @@ export default function Agenda({user}) {
         
     }, [currentIdUser, year])
     
+    let navigate = useNavigate()
+    const test = (info) => {
+        navigate(`/event-list/add?start=${info.startStr}&end=${info.endStr}`)
+    }
     return (
     <>  
         <h1>Agenda</h1>
@@ -138,7 +140,7 @@ export default function Agenda({user}) {
         </Form.Select>
         <FullCalendar
             locale={frLocale}
-            plugins={[listPlugin, dayGridPlugin]}
+            plugins={[listPlugin, dayGridPlugin, interactionPlugin]}
             initialView={isMobile}
             events={events}
             headerToolbar={{
@@ -147,6 +149,8 @@ export default function Agenda({user}) {
                 right: "dayGridMonth,listMonth"
             }}
             ref={calendarRef}
+            selectable={true}
+            select={test}
         />
     </>
     )

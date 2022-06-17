@@ -23,9 +23,11 @@ export default function ListItem(props) {
         setIsSelected(isSelected);
         props.selected(id, value, e);
     }
+    
     useEffect(() => {
-            setIsSelected(props.state.includes(`/api/accreditations/${props.id}`));
-        });
+        setIsSelected(props.state.includes(props.id));
+    });
+
     return (
         <>   
             <tr onClick={(e) => onClick(!isSelected, props.id, e.target.checked, e)}>

@@ -29,6 +29,7 @@ export default function CategoryEdit() {
     useEffect(() => {
         Api.get(`/event_categories/${id}`)
         .then((response) => {
+            console.log(response.data)
             setCategory(response.data);
         })
         Api.get(`/roles`)
@@ -85,7 +86,7 @@ export default function CategoryEdit() {
             <div>
                 <Formik
                     enableReinitialize
-                    initialValues={{ label: category?.label, description: category?.description, status: category?.status, defaultVisible: category?.defaultValueIsVisible, fonctions: selectedFonctions, fonctionAccreditations: selectedAccreditations }}
+                    initialValues={{ label: category?.label, description: category?.description, status: category?.status, defaultVisible: category?.defaultValueIsVisible, fonctions: category && category.fonctions.map(fonction => fonction.id), fonctionAccreditations: category && category.fonctionAccreditations.map(fonctionAccreditation => fonctionAccreditation.id) }}
                     validate={values => {
                     const errors = {};
                     if (!values.label) {
