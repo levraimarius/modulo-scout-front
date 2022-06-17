@@ -2,34 +2,25 @@ import React, { useEffect, useState } from 'react';
 import Api from "../Api"
 import {
     BrowserRouter as Router,
-    Routes,
-    Route,
-    Link,
-    useParams,
-    BrowserRouter
+    useParams
 } from "react-router-dom";
-import { Editor } from "react-draft-wysiwyg";
-import { EditorState } from 'draft-js';
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import ListItem from '../ListItem/ListItem';
-import { Icon } from '@iconify/react';
 import Wysiwyg from '../Wysiwyg';
-import axios from 'axios';
 
 
 const baseURL = "api/auth-token";
 const token = localStorage.getItem('token');
 
-export default function CategoryEdit() {
+export default function EditEvents() {
     let { id } = useParams();
-    const [category, setCategory] = useState(null);
+    const [events, setEvents] = useState(null);
     const [roles, setRoles] = useState([]);
 
     useEffect(() => {
-        Api.get(`/event_categories/${id}`)
+        Api.get(`/events/${id}`)
         .then((response) => {
-            setCategory(response.data);
+            setEvents(response.data);
         })
         Api.get(`/roles`)
         .then((response) => {
@@ -38,8 +29,8 @@ export default function CategoryEdit() {
     }, []);
 
     const handleSubmit = (values) => {
-        Api.put(`/event_categories/${id}`, {
-            label: values.label,
+        Api.put(`/events/${id}`, {
+            title: values.title,
             description: values.description,
             status: values.status,
             defaultValueIsVisible: values.defaultVisible, 
@@ -47,13 +38,13 @@ export default function CategoryEdit() {
             fonctionAccreditations: values.fonctionAccreditations.map(fonction => `/api/roles/${fonction}`)
         })
         .then((response) => {
-            window.location.href = "/event-categories";
+            window.location.href = "/event-list";
         })
     }
 
     const selectedFonctions = []
     const getFonctions = () => {
-        category && category.fonctions.map(fonction => {
+        events && events.fonctions.map(fonction => {
             const fonctionId = /[^/]*$/.exec(fonction)[0];
             selectedFonctions.push(parseInt(fonctionId));
         })
@@ -61,7 +52,7 @@ export default function CategoryEdit() {
 
     const selectedAccreditations = []
     const getAccreditations = () => {
-        category && category.fonctionAccreditations.map(fonction => {
+        events && events.fonctionAccreditations.map(fonction => {
             const fonctionId = /[^/]*$/.exec(fonction)[0]
             selectedAccreditations.push(parseInt(fonctionId)) 
         })
@@ -85,11 +76,11 @@ export default function CategoryEdit() {
             <div>
                 <Formik
                     enableReinitialize
-                    initialValues={{ label: category?.label, description: category?.description, status: category?.status, defaultVisible: category?.defaultValueIsVisible, fonctions: selectedFonctions, fonctionAccreditations: selectedAccreditations }}
+                    initialValues={{ title: events?.title, description: events?.description, defaultVisible: events?.defaultVisible }}
                     validate={values => {
                     const errors = {};
-                    if (!values.label) {
-                        errors.label = 'Vous devez renseigner un libellé.';
+                    if (!values.title) {
+                        errors.title = 'Vous devez renseigner un libellé.';
                     }
                     if (!values.description) {
                         errors.description = 'Vous devez renseigner une description';
@@ -104,9 +95,9 @@ export default function CategoryEdit() {
                 {({ isSubmitting }) => (
                     <Form className="form">
                         <div className="form-group mt-5">
-                            <label htmlFor="label">Libellé</label>
-                            <Field className="input-field form-control" type="text" name="label"/>
-                            <ErrorMessage className="error-message" name="label" component="div" />
+                            <label htmlFor="title">Libellé</label>
+                            <Field className="input-field form-control" type="text" name="title"/>
+                            <ErrorMessage className="error-message" name="title" component="div" />
                         </div>
                         <div className="form-group mt-5">
                             <label htmlFor='description'>Template de l'événement</label>

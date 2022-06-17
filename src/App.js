@@ -2,6 +2,9 @@ import './App.scss';
 import { BrowserRouter, Routes, Route, Navigate, NavLink } from "react-router-dom";
 import Login from './components/LoginForm/Login';
 import FunctionAccreditation from './components/FunctionAccreditation/FunctionAccreditation';
+import ListEvents from './components/Events/ListEvents';
+import AddEvents from './components/Events/AddEvents';
+import EditEvents from './components/Events/EditEvents';
 import RolesList from './components/RolesList/RoleList';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import CategoryList from './components/Category/CategoryList';
@@ -65,7 +68,8 @@ function App() {
                   {
                     isAdmin() &&
                       <NavDropdown title="Backoffice" id="basic-nav-dropdown">
-                        <NavDropdown.Item href='/roles'>Rôles</NavDropdown.Item>
+                        <NavDropdown.Item href='/event-list'>Liste des événements</NavDropdown.Item>
+                        <NavDropdown.Item href='/roles'>Roles</NavDropdown.Item>
                         <NavDropdown.Item href='/event-categories'>Catégories d'événements</NavDropdown.Item>
                         <NavDropdown.Item href='/users'>Gestion des utilisateurs</NavDropdown.Item>
                       </NavDropdown>
@@ -85,6 +89,9 @@ function App() {
           { (localStorage.getItem("token") === null && localStorage.getItem("currentScope")) === null && <Route path="/" element={<Login />} /> }
           { (localStorage.getItem("token") && localStorage.getItem("currentScope") !== null) && <Route path="/" element={<ConnectedHomepage />} /> }
           { (localStorage.getItem("token") && localStorage.getItem("currentScope") === null) && <Route path="/" element={<ScopeChoice user={user} />} /> }
+          <Route path="/event-list" element={isAdmin() ? <ListEvents /> : <Navigate to="/" />}/>
+          <Route path="/event-list/add"  element={isAdmin() ? <AddEvents /> : <Navigate to="/" />} />
+          <Route path="/event-list/edit/:id" element={isAdmin() ? <EditEvents /> : <Navigate to="/" />} />
           <Route path="/roles" element={isAdmin() ? <RolesList /> : <Navigate to="/" />}/>
           <Route path="/roles/accreditation/:id" element={isAdmin() ? <FunctionAccreditation /> : <Navigate to="/" />} />
           <Route path="/event-categories" element={isAdmin() ? <CategoryList /> : <Navigate to="/" />} />
