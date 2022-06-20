@@ -36,21 +36,14 @@ export default function AddEvent() {
     const currentRole = currentScope[1][0];
     const currentStructure = currentScope[0][0];
 
-    const [guests, setGuests] = useState('');
-
-    const getGuests = (e) => {
-        setGuests(Array.from(e.target.selectedOptions, option => option.text));
-    }
-
     const defaultRole = (e) => {
-        Api.get(`/event_categories/${e.target.value}`)
+        e.target.value !== "0" && Api.get(`/event_categories/${e.target.value}`)
         .then((response) => {
             setDefaultRoles(response.data.fonctions);
         })
     }
 
     const handleSubmit = (values) => {
-        console.log(defaultUsers)
         Api.post('/events', {
             startAt: `${values.start}`,
             endAt: `${values.end}`,
@@ -63,11 +56,8 @@ export default function AddEvent() {
             linkedStructures: structures ? values.linkedStructures.map(structure => `/api/structures/${structure}`) : ''
         })
         .then((response) => {
-            window.location.href = "/event-categories";
+            window.location.href = "/agenda";
         })
-    }
-    const deleteGuest = (i) => {
-        setGuests(guests.filter((data, index) => {return index !== i}))
     }
 
     useEffect(() => {
@@ -88,7 +78,41 @@ export default function AddEvent() {
         isAccredited(11).then(response => setChangeVisibility(response));
     }, []);
 
-    
+    const validate = (values) => {
+        const errors = {};
+
+        if (values.start > values.end) {
+            errors.start = "Veuillez saisir une date de début antérieure à la date de fin."
+        }
+
+        if (values.end > values.start) {
+            errors.end = "Veuillez saisir une date de fin postérieure à la date de début."
+        }
+
+        if (!values.end) {
+            errors.end = "Veuillez saisir une date de fin."
+        }
+
+        if (!values.start) {
+            errors.end = "Veuillez saisir une date de début."
+        }
+
+        if (!values.title) {
+            errors.title = "Veuillez saisir un titre."
+        }
+        
+        console.log(values.category)
+        if (values.category === "0") {
+            errors.category = "Veuillez saisir une catégorie."
+        }
+
+        if (!values.description) {
+            errors.description = "Veuillez saisir une description."
+        }
+
+        return errors;
+    };
+
     return (
     <>
         <div className="container my-5">
@@ -98,6 +122,7 @@ export default function AddEvent() {
                 <Formik
                     initialValues={{ start: searchParams ? `${searchParams.get("start")}T00:00` : '', end: searchParams ? `${searchParams.get("end")}T00:00` : '', title: "", category: "", description: "", roles: '', invitedPersons: [], isVisible: true, linkedStructures: '' }}
                     onSubmit={handleSubmit}
+                    validate={validate}
                 >
                     {({ isSubmitting }) => (
                         <Form className="col">
@@ -128,7 +153,7 @@ export default function AddEvent() {
                                         <option value='0'>Choisissez une catégorie</option>
                                         {categories}
                                     </Field>
-                                    <ErrorMessage className="error-message" name="category" component="div" />
+                                    <ErrorMessage className="error-form" name="category" component="div" />
                                 </div>
                             </div>
 
@@ -149,18 +174,6 @@ export default function AddEvent() {
                                             <SearchSelect defaultItem={defaultRoles} setDefaultItem={setDefaultRoles} name='Roles invités' search='roles'/>
                                         </>
                                     }
-                                    {changeVisibility &&
-                                        <div className="my-3">
-                                            <div className='form-check'>
-                                                <Field className="input-field form-check-input" type="checkbox" name="status"/>
-                                                <label className="form-check-label" htmlFor='status'>Est visible à tous ?</label>
-                                            </div>
-
-                                            <button type="submit" className="btn btn-light col-auto my-2">
-                                                Envoyer
-                                            </button>
-                                        </div>
-                                    }
                                 </div>
                             </div>
                             {addInvited &&
@@ -180,13 +193,9 @@ export default function AddEvent() {
                                     {changeVisibility &&
                                         <div className="my-3">
                                             <div className='form-check'>
-                                                <Field className="input-field form-check-input" type="checkbox" name="status"/>
-                                                <label className="form-check-label" htmlFor='status'>Est visible à tous ?</label>
+                                                <Field className="input-field form-check-input" type="checkbox" name="isVisible"/>
+                                                <label className="form-check-label" htmlFor='isVisible'>Est visible à tous ?</label>
                                             </div>
-
-                                            <button type="submit" className="btn btn-light col-auto my-2">
-                                                Envoyer
-                                            </button>
                                         </div>
                                     }
                                 </div> 

@@ -36,7 +36,7 @@ function App() {
     currentUser && Api.get(`users?uuid=${currentUser.uuid}`)
     .then((response) => {
         setUser(response.data[0]);
-        localStorage.setItem("currentScope", JSON.stringify([[response.data[0].scope[0].structure.id], [response.data[0].scope[0].role.id]]))
+        !localStorage.getItem("currentScope") && localStorage.setItem("currentScope", JSON.stringify([[response.data[0].scope[0].structure.id], [response.data[0].scope[0].role.id]]))
     })
 
     isAccredited(3).then(response => setAddEvent(response));
@@ -98,7 +98,7 @@ function App() {
           { (localStorage.getItem("token") && localStorage.getItem("currentScope") !== null) && <Route path="/" element={<ConnectedHomepage />} /> }
           { (localStorage.getItem("token") && localStorage.getItem("currentScope") === null) && <Route path="/" element={<ScopeChoice user={user} />} /> }
           <Route path="/event-list" element={isAdmin() ? <ListEvents /> : <Navigate to="/" />}/>
-          <Route path="/event-list/add" element={isAdmin() && (addEvent)  ? <AddEvents /> : <Navigate to="/" />} />
+          <Route path="/event-list/add" element={isAdmin() ? <AddEvents /> : <Navigate to="/" />} />
           <Route path="/event-list/edit/:id" element={isAdmin() ? <EditEvents /> : <Navigate to="/" />} />
           <Route path="/roles" element={isAdmin() ? <RolesList /> : <Navigate to="/" />}/>
           <Route path="/roles/accreditation/:id" element={isAdmin() ? <FunctionAccreditation /> : <Navigate to="/" />} />

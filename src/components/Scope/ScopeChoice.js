@@ -13,7 +13,7 @@ export default function ScopeChoice(props) {
     useEffect(() => {
         props.user && setScopes(props.user.scope)
     }, [props]);
-
+    
     return (
     <>  
         <div>Choisissez votre scope</div>
