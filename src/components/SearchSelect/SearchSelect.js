@@ -57,7 +57,6 @@ export default function SearchSelect(props) {
     }
 
     const selectItem = (item) => {
-        console.log(item);
         if (props.defaultItem) {
             props.setDefaultItem([...props.defaultItem, item])
         }
@@ -66,7 +65,6 @@ export default function SearchSelect(props) {
         }
     }
 
-    console.log(props.defaultItem)
     return (
         <>
             <label htmlFor='roles'>{props.name}</label>

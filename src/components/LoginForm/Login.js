@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { Container } from "react-bootstrap";
+import jwt from 'jwt-decode';
+import Api from "../Api";
 
 const baseURL = "api/auth-token";
 
@@ -12,8 +14,10 @@ export default function Login() {
         axios
             .post(baseURL, {uuid: values.uuid.toString(), password: values.password})
             .then((response) => {
-                localStorage.setItem("token", response.data.token)
-                window.location.href = "/";
+                console.log(response)
+                const currentUser = jwt(response.data.token);
+                localStorage.setItem("token", response.data.token);
+                window.location.href = "/scope-choice";
             })
             .catch(err => {
                 setError(err.response.data.message);
@@ -33,6 +37,7 @@ export default function Login() {
       
         return errors;
       };
+
     return (
     <>
         <Container>
