@@ -1,5 +1,3 @@
-import React, { useEffect, useState } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import Api from './Api';
 
 export const isAccredited = (value) => {

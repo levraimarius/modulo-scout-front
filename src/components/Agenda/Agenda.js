@@ -132,7 +132,7 @@ export default function Agenda({user}) {
         navigate(`/event-list/add?start=${info.startStr}&end=${info.endStr}`)
     }
     return (
-    <>  
+    <div className="container">  
         <h1>Agenda</h1>
         <SelectYear year={setYear, onYearChange} lastestYear={2018}/>
         <Form.Select onChange={(e) => onMonthChange(e.target.value, year)}>
@@ -145,13 +145,12 @@ export default function Agenda({user}) {
             events={events}
             headerToolbar={{
                 left: "prev,next",
-                center: "title",
-                right: "dayGridMonth,listMonth"
+                right: "title"
             }}
             ref={calendarRef}
             selectable={true}
             select={test}
         />
-    </>
+    </div>
     )
 }

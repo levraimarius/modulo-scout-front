@@ -20,9 +20,12 @@ import ListUsers from './components/Users/ListUsers';
 import Agenda from './components/Agenda/Agenda';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {getRoleAccreditations} from './components/Accreditations';
+import { isAccredited } from './components/Accreditations';
 
 function App() {
   const [user, setUser] = useState(null);
+  const [addEvent, setAddEvent] = useState(null)
+  const [updateEvent, setUpdateEvent] = useState(null)
   const token = localStorage.getItem('token');
   let currentUser = null;
   if (token) {
@@ -34,6 +37,9 @@ function App() {
     .then((response) => {
         setUser(response.data[0]);
     })
+
+    isAccredited(3).then(response => setAddEvent(response));
+    isAccredited(4).then(response => setUpdateEvent(response));
   }, []);
 
   if (currentUser && currentUser.exp < Date.now() / 1000) {
@@ -91,7 +97,7 @@ function App() {
           { (localStorage.getItem("token") && localStorage.getItem("currentScope") !== null) && <Route path="/" element={<ConnectedHomepage />} /> }
           { (localStorage.getItem("token") && localStorage.getItem("currentScope") === null) && <Route path="/" element={<ScopeChoice user={user} />} /> }
           <Route path="/event-list" element={isAdmin() ? <ListEvents /> : <Navigate to="/" />}/>
-          <Route path="/event-list/add"  element={isAdmin() ? <AddEvents /> : <Navigate to="/" />} />
+          <Route path="/event-list/add" element={isAdmin() && (addEvent || updateEvent)  ? <AddEvents /> : <Navigate to="/" />} />
           <Route path="/event-list/edit/:id" element={isAdmin() ? <EditEvents /> : <Navigate to="/" />} />
           <Route path="/roles" element={isAdmin() ? <RolesList /> : <Navigate to="/" />}/>
           <Route path="/roles/accreditation/:id" element={isAdmin() ? <FunctionAccreditation /> : <Navigate to="/" />} />
