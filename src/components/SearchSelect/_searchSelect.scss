@@ -1,0 +1,65 @@
+@import "../../styles/variables";
+
+.red {
+    color: red;
+}
+.select-container {
+    display: flex;
+    gap: 30px;
+
+    @media (max-width: 1250px) {
+        flex-direction: column;
+    }
+
+    .selected {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        width: 40%;
+
+        .badge {
+            height: 22px;
+            background-color: $purple;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: all .3s ease-in-out;
+            cursor: pointer;
+
+            &:hover {
+                background-color: $dark-purple;
+            }
+        }
+    }
+}
+
+.select {
+    border: 1px solid $grey;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-top: none;
+    max-height: 100px;
+    overflow-y: scroll;
+    width: 50%;
+
+    .search-select {
+        border-bottom-right-radius: 0px;
+        border-bottom-left-radius: 0px;
+    }
+
+    .selected-item {
+        background-color: $light-purple;
+    }
+
+    > div {
+        padding: 10px;
+        transition: all .2s ease-in-out;
+
+        &:hover {
+            background-color: $light-purple;
+        }
+
+        &:not(:last-child) {
+            border-bottom: 1px solid $grey;
+        }
+    }
+}

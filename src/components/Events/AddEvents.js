@@ -10,6 +10,8 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { FormControl, Table } from "react-bootstrap";
 import { EMPTY } from 'draft-js/lib/CharacterMetadata';
 import { isAccredited } from '../Accreditations';
+import SearchSelect from '../SearchSelect/SearchSelect';
+import { searchUser, searchRole} from './Utils';
 
 export default function AddEvent() {
     let { id } = useParams();
@@ -22,7 +24,8 @@ export default function AddEvent() {
             [search, setSearch] = useState(),
             [isMenuOpen, setIsMenuOpen] = useState(false),
             { page } = useParams(),
-            [defaultRoles, setDefaultRoles] = useState([{}]),
+            [defaultRoles, setDefaultRoles] = useState([]),
+            [defaultUsers, setDefaultUsers] = useState([]),
             [changeRoles, setChangeRoles] = useState(false),
             [addInvited, setAddInvited] = useState(false),
             [changeVisibility, setChangeVisibility] = useState(false),
@@ -47,21 +50,21 @@ export default function AddEvent() {
     }
 
     const handleSubmit = (values) => {
+        console.log(defaultUsers)
         Api.post('/events', {
             startAt: `${values.start}`,
             endAt: `${values.end}`,
             title: values.title,
             category: `/api/event_categories/${values.category}`,
             description: values.description,
-            invitedRoles: defaultRoles.map(role => `/api/roles/${role}`),
-            invitedPersons: values.invitedPersons.map(person => `/api/users/${person}`),
+            invitedRoles: defaultRoles.map(role => `/api/roles/${role.id}`),
+            invitedPersons: defaultUsers.map(person => `/api/users/${person.id}`),
             isVisible: values.isVisible,
             linkedStructures: structures ? values.linkedStructures.map(structure => `/api/structures/${structure}`) : ''
         })
         .then((response) => {
             window.location.href = "/event-categories";
         })
-        
     }
     const deleteGuest = (i) => {
         setGuests(guests.filter((data, index) => {return index !== i}))
@@ -73,48 +76,19 @@ export default function AddEvent() {
             setCategories(response.data.map(data => <option value={data.id} key={data.id}>{data.label}</option>));
             //setDefaultRoles(response.data[0].fonctions.map(data => parseInt(/[^/]*$/.exec(data)[0])))
         })
-        Api.get(`/roles`)
-        .then((response) => {
-            console.log(response.data)
-            setRoles(response.data);
-        })
+
         // If structure has children, show structures
         Api.get(`/structures?parentStructure=${currentStructure}&pagination=false`)
         .then((response) => {
             setStructure(response.data)
         }).catch(err => console.log(err));
-
+        
         isAccredited(9).then(response => setChangeRoles(response));
         isAccredited(10).then(response => setAddInvited(response));
         isAccredited(11).then(response => setChangeVisibility(response));
     }, []);
 
-    let usersList = [];
-    const searchUser = (e) => {
-        if (e.target.value !== '')
-        {
-            usersList = users.filter(user => user.firstName.toLowerCase().startsWith(e.target.value) || user.lastName.toLowerCase().startsWith(e.target.value));
-        }
-    }   
-
-    const updateRole = (roleId) => {
-        const newRoles = defaultRoles.filter(role => role.id !== roleId)
-        setDefaultRoles(newRoles)
-    }
-
-    let rolesList = roles;
-    const searchRoles = (e) => {
-        console.log(e.target.value);
-        if (e.target.value !== '') {
-            rolesList = roles.filter(role => role.name.toLowerCase().startsWith(e.target.value));
-        } else {
-            rolesList = roles;
-        }
-    }
-
-    const addRole = (newRole) => {
-        setDefaultRoles([...defaultRoles, newRole])
-    }
+    
     return (
     <>
         <div className="container my-5">
@@ -122,7 +96,6 @@ export default function AddEvent() {
 
             <div className="my-5">
                 <Formik
-                    enableReinitialize
                     initialValues={{ start: searchParams ? `${searchParams.get("start")}T00:00` : '', end: searchParams ? `${searchParams.get("end")}T00:00` : '', title: "", category: "", description: "", roles: '', invitedPersons: [], isVisible: true, linkedStructures: '' }}
                     onSubmit={handleSubmit}
                 >
@@ -169,30 +142,13 @@ export default function AddEvent() {
                                 <ErrorMessage className="error-message" name="description" component="div" />
                             </div>
 
-                            <div class="row my-3">
-                                <div className="col-6 form-group">
+                            <div>
+                                <div>
                                     {changeRoles &&
                                         <>
-                                            <label htmlFor='roles'>Roles invités</label>
-                                            <input type="text" name="roles" className="form-control" onChange={searchRoles}>
-                                            </input>
-                                            {defaultRoles &&
-                                            <div>
-                                                {rolesList && rolesList.map(role => {
-                                                    return (<div key={`${role.id}.${role.code}`} onClick={() => setDefaultRoles([...defaultRoles, role])}>{role.name}</div>)
-                                                })}
-                                            </div>
-                                            }
-                                            <ErrorMessage className="error-message" name="roles" component="div" />
+                                            <SearchSelect defaultItem={defaultRoles} setDefaultItem={setDefaultRoles} name='Roles invités' search='roles'/>
                                         </>
                                     }
-                                    <div>
-                                        {defaultRoles && defaultRoles.map(role => {
-                                            return (
-                                                <div className='badge badge-pill bg-primary' key={role.id} onClick={() => updateRole(role.id)}>{role.name}</div>
-                                            )
-                                        })}
-                                    </div>
                                     {changeVisibility &&
                                         <div className="my-3">
                                             <div className='form-check'>
@@ -206,43 +162,9 @@ export default function AddEvent() {
                                         </div>
                                     }
                                 </div>
-                                {addInvited &&
-                                    <div className="col-6 d-grid justify-item-end">
-                                        <label htmlFor="person">Personnes invitées</label>
-                                        <input type="text" name="person" placeholder="titre" className="form-control" onChange={searchUser}/>
-                                        <div className="input-group">
-                                            <Field multiple dataLiveSearch as="select" name="invitedPersons" className="form-select" onClick={getGuests}>
-                                                {users && users.map(user => {
-                                                    return (
-                                                        <option value={user.id} key={user.id}>{user.lastName} {user.firstName}</option>
-                                                    )
-                                                })}
-                                            </Field>
-                                        </div>
-
-                                        { guests === '' ? '' : guests &&
-                                            <div className="table-responsive-xxl my-3">
-                                                <Table hover striped>
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Invités sélectionner</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        {
-                                                            guests.map((guest, index) => {
-                                                                return (
-                                                                    <tr onClick={() => deleteGuest(index)}>
-                                                                        <td>{guest}{index}</td>
-                                                                    </tr>
-                                                                )
-                                                            })
-                                                        }
-                                                    </tbody>
-                                                </Table>
-                                            </div>
-                                        }
-                                    </div>
+                            </div>
+                            {addInvited &&
+                                    <SearchSelect defaultItem={defaultUsers} setDefaultItem={setDefaultUsers} name="Invitation nominatives" search='users'/>    
                                 }
                                 <div>
                                     {structures &&
@@ -268,7 +190,6 @@ export default function AddEvent() {
                                         </div>
                                     }
                                 </div> 
-                            </div>
                             <button type="submit" className="btn btn-light col-auto my-3">
                                 Envoyer
                             </button>
