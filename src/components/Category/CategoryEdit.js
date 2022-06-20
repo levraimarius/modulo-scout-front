@@ -29,7 +29,6 @@ export default function CategoryEdit() {
     useEffect(() => {
         Api.get(`/event_categories/${id}`)
         .then((response) => {
-            console.log(response.data)
             setCategory(response.data);
         })
         Api.get(`/roles`)

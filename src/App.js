@@ -77,7 +77,7 @@ function App() {
                     isAdmin() &&
                       <NavDropdown title="Backoffice" id="basic-nav-dropdown">
                         <NavDropdown.Item href='/event-list'>Liste des événements</NavDropdown.Item>
-                        <NavDropdown.Item href='/roles'>Roles</NavDropdown.Item>
+                        <NavDropdown.Item href='/roles'>Rôles</NavDropdown.Item>
                         <NavDropdown.Item href='/event-categories'>Catégories d'événements</NavDropdown.Item>
                         <NavDropdown.Item href='/users'>Gestion des utilisateurs</NavDropdown.Item>
                       </NavDropdown>
