@@ -5,6 +5,7 @@ import {
     Link
 } from "react-router-dom";
 import { Icon } from '@iconify/react';
+import Moment from 'moment';
 
 const baseURL = "api/auth-token";
 const token = localStorage.getItem('token');
@@ -56,7 +57,7 @@ export default function ListEvents() {
                                         dangerouslySetInnerHTML={{__html: event.description}}
                                     />
                                 </td>
-                                <td>{event.start_at} - {event.end_at}</td>
+                                <td>Du {Moment(event.start).format('DD/MM/YYYY HH:mm')} au {Moment(event.end).format('DD/MM/YYYY HH:mm')}</td>
                                 <td>
                                     <Link to={`/event-list/edit/${event.id}`} className="btn btn-success"><Icon icon="bxs:edit"/></Link>
                                     <button type="button" className="btn btn-danger" onClick={() => deleteItem(event.id)}><Icon icon="fluent:delete-24-filled"/></button>

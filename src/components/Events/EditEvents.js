@@ -22,7 +22,7 @@ export default function EditEvents() {
             setEvent(response.data);
         })
     }, []);
-    console.log(event)
+    
     return (
     <>
         <div className="container mt-5">
