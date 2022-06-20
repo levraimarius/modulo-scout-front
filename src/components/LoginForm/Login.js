@@ -17,6 +17,8 @@ export default function Login() {
                 console.log(response)
                 const currentUser = jwt(response.data.token);
                 localStorage.setItem("token", response.data.token);
+
+                console.log(localStorage)
                 window.location.href = "/scope-choice";
             })
             .catch(err => {
@@ -36,7 +38,7 @@ export default function Login() {
         }
       
         return errors;
-      };
+    };
 
     return (
     <>

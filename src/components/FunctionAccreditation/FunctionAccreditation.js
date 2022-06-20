@@ -64,7 +64,6 @@ export default function FunctionAccreditation() {
         })
         .then((response) => {window.location.href = "/roles"})
     }
-    
     return (
     <>
         <div className="container mt-5">

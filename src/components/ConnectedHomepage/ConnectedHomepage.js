@@ -3,7 +3,21 @@ import ScopeChoice from '../Scope/ScopeChoice';
 import Api from "../Api";
 
 export default function ConnectedHomepage() {
-    const currentScope = localStorage.getItem("currentScope");
+    const [structure, setStructure] = useState();
+    const [role, setRole] = useState();
+    const currentScope = JSON.parse(localStorage.getItem("currentScope"));
+
+    useEffect(() => {
+        Api.get(`/structures/${currentScope[0][0]}`)
+        .then((response) => {
+            setStructure(response.data.name)
+        })
+
+        Api.get(`/roles/${currentScope[1][0]}`)
+        .then((response) => {
+            setRole(response.data.name)
+        })
+    }, []);
 
     return (
     <>
@@ -13,7 +27,7 @@ export default function ConnectedHomepage() {
                 {currentScope &&
                     <>
                         <h3>Scope actuel :</h3>
-                        <div>{currentScope}</div>
+                        <div>{structure && structure} | {role && role}</div>
                     </>
                 }
             </div>
