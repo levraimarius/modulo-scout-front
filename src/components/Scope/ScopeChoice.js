@@ -12,7 +12,7 @@ export default function ScopeChoice(props) {
 
     useEffect(() => {
         props.user && setScopes(props.user.scope)
-      }, [props]);
+    }, [props]);
 
     return (
     <>  
